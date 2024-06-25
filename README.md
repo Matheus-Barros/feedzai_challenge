@@ -1,10 +1,9 @@
 # Feedzai Challenge
 ![Feedzai_logo,_2020 svg](https://github.com/Matheus-Barros/feedzai_challenge/assets/51465352/4def5af5-3029-43a1-aa8e-249583bc2151)
 
-
 ## Overview
 
-This repository contains a Python script designed to read CSV files, load their contents into an SQLite database, execute predefined SQL queries, and output the results to CSV files. The script is aimed at providing valuable insights into the productivity and efficiency of development teams by calculating key performance indicators (KPIs) related to the work logged by team members.
+This repository contains a Python script designed to read CSV files, load their contents into an SQLite database, execute predefined SQL queries, and output the results to CSV files.
 
 ## Features
 
