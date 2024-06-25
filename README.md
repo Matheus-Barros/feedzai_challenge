@@ -48,7 +48,8 @@ feedzai.read_csv_files(csv_files)
 
 ### 2. Loading Data into Database
 
-The `load_data` method loads the DataFrames into the SQLite database as tables.
+The `load_data` method is responsible for loading the DataFrames into the SQLite database as tables. The names of the tables to be created in the database must match the keys used in the dictionary when reading the CSV files. This ensures that the correct DataFrame is uploaded to the corresponding table in the database.
+
 
 ```python
 feedzai.load_data('work_hours')
@@ -57,7 +58,7 @@ feedzai.load_data('time_off')
 
 ### 3. Executing SQL Queries
 
-The `query_data` method executes predefined SQL queries to calculate KPIs and writes the results to CSV files.
+The `query_data` method executes predefined SQL queries and writes the results to CSV files.
 
 ```python
 query_1 = """
@@ -97,8 +98,8 @@ feedzai_challenge
 
 ### File Descriptions
 
-- **feedzai_challenge.yaml**: Anaconda virtual env file to install.
 - **main.py**: The main script containing the FeedzaiChallenge class and its methods.
+- **feedzai_challenge.yaml**: Anaconda virtual env file to install.
 - **requirements.txt**: Lists the dependencies required to run the script.
 - **anaconda_environment**: Directory with virtual env used.
 - **csv_sources**: Directory containing the input CSV files.
