@@ -37,7 +37,6 @@ class FeedzaiChallenge:
         database_name : str
             The name of the SQLite database to create and connect to.
         """
-        os.makedirs('database', exist_ok=True)
         self.database_name = database_name
         self.conn = sqlite3.connect(f'database/{self.database_name}.db')
         self.dfs = dict()
@@ -90,7 +89,7 @@ class FeedzaiChallenge:
         Parameters:
         -----------
         query : str
-            The SQL query to execute.
+            The SQL query to execute or the path to the SQL file.
         output_path : str
             The file path where the query results will be saved as a CSV file.
 
@@ -100,7 +99,13 @@ class FeedzaiChallenge:
             If there is an error executing the query or writing the results to the CSV file.
         """
         try:
-            result = pd.read_sql_query(query, self.conn)
+            if os.path.isfile(query):
+                with open(query, 'r', encoding='utf-8') as file:
+                    query_str = file.read()
+            else:
+                query_str = query
+
+            result = pd.read_sql_query(query_str, self.conn)
             result.to_csv(output_path, index=False)
         except Exception as ex:
             print(f"Error executing query or writing to {output_path}: {ex}")
@@ -138,75 +143,8 @@ if __name__ == "__main__":
     feedzai.load_data('work_hours')
     feedzai.load_data('time_off')
 
-    """
-    Query 1
-    Build a model using SQL to calculate “actual costs”. This indicator calculates the total accumulated cost of a 
-    project at a given day by summing up all worked hours up until that day. Consider a flat rate of 100$ for the 
-    cost of each work hour.
-    """
-    query_1 = f"""
-    SELECT
-        project_id,
-        date,
-        SUM((worked/1000.0)*100.0) OVER (PARTITION BY project_id ORDER BY date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS total_accumulated_cost
-    FROM
-        work_hours;
-    """
-
-    """
-    Query 2
-
-    Build a model using SQL to calculate “project utilization”. This indicator calculates the percentage of total 
-    available hours each employee is allocated to a project, per month, assuming 8h/day of work time for each employee
-    except on weekends and time off.
-    """
-    query_2 = f"""
-    with max_min as (
-        SELECT date from work_hours UNION SELECT date_start FROM time_off UNION SELECT date_end FROM time_off
-    ),
-    all_working_days as (
-        with RECURSIVE DateRange AS (
-            SELECT min(date) AS Date FROM max_min
-            UNION ALL
-            SELECT DATE(Date, '+1 day') FROM DateRange WHERE Date < (select max(date) from max_min)
-        )
-        SELECT Date
-        FROM DateRange
-        WHERE strftime('%w', Date) NOT IN ('0', '6')
-    ),
-    available_work_hours_per_user as (
-        SELECT
-            t.employee_id,
-            t.employee_name,
-            --t.date_start,
-            --t.date_end,
-            STRFTIME('%Y-%m', d.Date) as work_month,
-            count(d.Date)*8 as hours
-        FROM time_off t
-        CROSS JOIN all_working_days d
-        WHERE d.Date < t.date_start OR d.Date > t.date_end
-        group by employee_id, employee_name, work_month
-    ),
-    worked_hours_by_month_by_project_by_employee as (
-        SELECT
-            wh.employee_id,
-            STRFTIME('%Y-%m', wh.date) as work_month,
-            wh.project_id,
-            sum(wh.worked)/1000.0 as worked_total
-        FROM work_hours wh
-        GROUP BY employee_id, work_month, project_id
-    )
-    SELECT 
-        ah.employee_name,
-        ah.work_month,
-        wh.project_id,
-        100.0*wh.worked_total/ah.hours as project_utilization_percent
-    FROM worked_hours_by_month_by_project_by_employee wh
-    JOIN available_work_hours_per_user ah ON ah.employee_id = wh.employee_id AND ah.work_month = wh.work_month
-    """
-
-    feedzai.query_data(query_1,r'output_files\acumulated_actual_costs.csv')
-    feedzai.query_data(query_2,r'output_files\project_utilization.csv')
+    feedzai.query_data(r'queries_sql\acumulated_actual_costs.sql',r'output_files\acumulated_actual_costs.csv')
+    feedzai.query_data(r'queries_sql\project_utilization.sql',r'output_files\project_utilization.csv')
 
     # Closing database connection
     feedzai.close_connection()

@@ -28,7 +28,7 @@ This repository contains a Python script designed to read CSV files, load their 
 - `__init__(self, database_name: str)`: Initializes the FeedzaiChallenge object with the specified database name.
 - `read_csv_files(self, csv_files: dict)`: Reads CSV files into DataFrames and stores them in a dictionary.
 - `load_data(self, table_name: str)`: Loads a DataFrame into the SQLite database as a table.
-- `query_data(self, query: str, output_path: str)`: Executes a SQL query and writes the results to a CSV file.
+- `query_data(self, query: str, output_path: str)`: Executes a SQL query or read a SQL file and writes the results to a CSV file.
 - `close_connection(self)`: Closes the SQLite database connection.
 
 ## Usage
@@ -73,13 +73,20 @@ feedzai.load_data('time_off')
 
 ### 3. Executing SQL Queries
 
-The `query_data` method executes predefined SQL queries and writes the results to CSV files.
+The `query_data` method executes predefined SQL or reads SQL file and writes the results to CSV files.
 
 ```python
 query_1 = """
 SELECT * FROM [table_name];
 """
-feedzai.query_data(query_1, r'path/file_name.csv')
+feedzai.query_data(query_1, r'path/to/save/file_name.csv')
+
+```
+
+OR
+
+```python
+feedzai.query_data(r'path/to/sql/file.sql', r'path/to/save/file_name.csv')
 
 ```
 
@@ -107,6 +114,9 @@ feedzai_challenge
 ├── output_files
 │   ├── acumulated_actual_costs.csv
 │   └── project_utilization.csv
+├── queries_sql
+│   ├── acumulated_actual_costs.sql
+│   └── project_utilization.sql
 ├── main.py
 ├── requirements.txt
 ```
@@ -120,6 +130,7 @@ feedzai_challenge
 - **csv_sources**: Directory containing the input CSV files.
 - **database**: Directory where the SQLite database is created.
 - **output_files**: Directory where the output CSV files are saved.
+- **queries_sql**: Directory where the queries of the challenge are saved.
 
 ## Setting Up the Environment - OPTION 1
 
