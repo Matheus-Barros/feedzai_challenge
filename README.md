@@ -34,6 +34,22 @@ This repository contains a Python script designed to read CSV files, load their 
 
 ## Usage
 
+### Initializing the FeedzaiChallenge Class
+
+The `FeedzaiChallenge` class is initialized with the `__init__` method, which sets up the necessary attributes and establishes a connection to the SQLite database.
+
+### Usage
+
+To initialize an instance of `FeedzaiChallenge`, provide the name of the SQLite database you want to work with:
+
+```python
+feedzai = FeedzaiChallenge('feedzai_database')
+```
+
+In this example:
+- `'feedzai_database'` is the name of the SQLite database. If the database does not already exist, it will be created in the `database` directory within the project.
+
+
 ### 1. Reading CSV Files
 
 The `read_csv_files` method reads CSV files into pandas DataFrames. The files to be read are specified in a dictionary where the keys are the table names and the values are the file paths.
