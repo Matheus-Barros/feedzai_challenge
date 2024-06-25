@@ -1,4 +1,4 @@
-# Feedzai Challenge: SQL Data Processing and Analysis
+# Feedzai Challenge
 
 ## Overview
 
