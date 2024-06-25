@@ -152,13 +152,3 @@ To set up the environment using Anaconda, follow these steps:
    ```bash
    python main.py
    ```
-
-## SQL Queries Explained
-
-### Query 1: Actual Costs Calculation
-
-This query calculates the total accumulated cost of a project at a given day by summing up all worked hours up until that day. A flat rate of $100 per work hour is used.
-
-### Query 2: Project Utilization Calculation
-
-This query calculates the percentage of total available hours each employee is allocated to a project, per month, assuming 8 hours/day of work time for each employee except on weekends and time off.
