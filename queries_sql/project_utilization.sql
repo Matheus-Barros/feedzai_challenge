@@ -19,8 +19,6 @@ available_work_hours_per_user as (
     SELECT
         t.employee_id,
         t.employee_name,
-        --t.date_start,
-        --t.date_end,
         STRFTIME('%Y-%m', d.Date) as work_month,
         count(d.Date)*8 as hours
     FROM time_off t
