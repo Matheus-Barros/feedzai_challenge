@@ -1,6 +1,7 @@
+import os
 import sqlite3
 import pandas as pd
-import os
+
 
 class FeedzaiChallenge:
     """
@@ -39,7 +40,7 @@ class FeedzaiChallenge:
         """
         self.database_name = database_name
         self.conn = sqlite3.connect(f'database/{self.database_name}.db')
-        self.dfs = dict()
+        self.dfs = {}
 
     def read_csv_files(self, csv_files: dict):
         """
@@ -123,8 +124,9 @@ class FeedzaiChallenge:
         try:
             self.conn.close()
         except Exception as ex:
-            print(f"Error closing conection of the database {self.database_name}: {ex}")
+            print(f"Error closing connection of the database {self.database_name}: {ex}")
             raise ex
+
 
 if __name__ == "__main__":
 
@@ -132,8 +134,8 @@ if __name__ == "__main__":
 
     # .Csv files to read
     csv_files = {
-    'time_off':r'csv_sources\time_off.csv',
-    'work_hours':r'csv_sources\work_hours.csv'
+        'time_off': r'csv_sources\time_off.csv',
+        'work_hours': r'csv_sources\work_hours.csv'
     }
 
     # Reading .csv files from dictionary
@@ -143,8 +145,8 @@ if __name__ == "__main__":
     feedzai.load_data('work_hours')
     feedzai.load_data('time_off')
 
-    feedzai.query_data(r'queries_sql\acumulated_actual_costs.sql',r'output_files\acumulated_actual_costs.csv')
-    feedzai.query_data(r'queries_sql\project_utilization.sql',r'output_files\project_utilization.csv')
+    feedzai.query_data(r'queries_sql\acumulated_actual_costs.sql', r'output_files\acumulated_actual_costs.csv')
+    feedzai.query_data(r'queries_sql\project_utilization.sql', r'output_files\project_utilization.csv')
 
     # Closing database connection
     feedzai.close_connection()
